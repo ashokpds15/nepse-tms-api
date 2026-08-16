@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nepse-tms-api"
+version = "0.1.0"
+description = "Python client for NEPSE TMS broker portals — login, holdings, order book and order placement over the REST API, no browser required."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "Abhinav Dev" }]
+keywords = ["nepse", "tms", "nepal", "stock", "trading", "broker", "api", "trading-api"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "httpx>=0.24",
+]
+
+[project.optional-dependencies]
+# Offline captcha solving, for unattended login.
+captcha = ["nepse-tms-captcha>=0.1.0"]
+# Deliberately excludes the captcha extra: the tests inject a fake solver, so
+# the suite runs without it and proves the library works when it is absent.
+dev = [
+    "pytest>=7.0",
+    "build>=1.0",
+    "twine>=5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/DevAbhinav2073/nepse-tms-api"
+Repository = "https://github.com/DevAbhinav2073/nepse-tms-api"
+Issues = "https://github.com/DevAbhinav2073/nepse-tms-api/issues"
+Changelog = "https://github.com/DevAbhinav2073/nepse-tms-api/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nepse_tms"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/", "tests/", "README.md", "LICENSE", "CHANGELOG.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
