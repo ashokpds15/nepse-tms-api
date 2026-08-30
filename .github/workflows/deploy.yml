@@ -18,17 +18,20 @@ jobs:
           echo "Add your real deployment steps here (rsync/ssh, cloud CLI, etc.)."
 
       - name: Deployment (SSH example — runs only if SSH_PRIVATE_KEY set)
-        if: ${{ secrets.SSH_PRIVATE_KEY }}
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
         run: |
           set -e
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} 'echo connected || true'
+          if [ -z "$SSH_PRIVATE_KEY" ]; then
+            echo "SSH_PRIVATE_KEY not set — skipping SSH deployment"
+          else
+            mkdir -p ~/.ssh
+            echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} 'echo connected || true'
+          fi
 
   notify:
     name: Notify Telegram about deploy
