@@ -18,7 +18,7 @@ jobs:
           echo "Add your real deployment steps here (rsync/ssh, cloud CLI, etc.)."
 
       - name: Deployment (SSH example — runs only if SSH_PRIVATE_KEY set)
-        if: ${{ secrets.SSH_PRIVATE_KEY != '' }}
+        if: ${{ secrets.SSH_PRIVATE_KEY }}
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
