@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  telegram-bot:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    container_name: telegram-dispatcher
+    # Optionally set resource limits here
+    # mem_limit: 256m

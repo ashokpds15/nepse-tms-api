@@ -65,3 +65,61 @@ If you'd like, proceed and:
 - I can update deploy.yml with a concrete deploy method you use (SSH, rsync, Docker Hub, AWS, etc.)
 - Create a systemd example unit or Dockerfile for the bot
 - Create a GitHub Actions secret setup checklist and optionally commit a .github/workflows/issue-or-pr-template to remind maintainers to add secrets
+
+Added Docker support and run instructions
+----------------------------------------
+Files added to make the bot runnable locally or on a server:
+- Dockerfile
+- docker-compose.yml
+- requirements.txt
+- .env.example
+
+Quick Docker / Compose run (do these locally):
+
+1. Copy the example file and fill in real credentials (do NOT commit this file):
+   cp .env.example .env
+   # edit .env and add your values
+
+2. Build and run with Docker Compose:
+   docker compose build
+   docker compose up -d
+
+3. Monitor logs:
+   docker compose logs -f telegram-bot
+
+CLI run (no container):
+1. Create a virtualenv and install deps:
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1   # Windows PowerShell
+   python -m pip install --upgrade pip
+   pip install -r requirements.txt
+
+2. Set environment variables in your shell (PowerShell example):
+   $env:TELEGRAM_BOT_TOKEN = 'bot<your-telegram-bot-token>'
+   $env:GITHUB_TOKEN = '<your-github-pat>'
+   $env:GITHUB_REPO = 'ashokpds15/nepse-tms-api'
+   # optional:
+   $env:TMS_BASE_URL = 'https://tms35.nepsetms.com.np'
+   $env:TMS_USERNAME = 'your_tms_user'
+   $env:TMS_PASSWORD = 'your_tms_password'
+
+3. Run the bot:
+   python scripts\telegram_bot.py
+
+Commands available once the bot is running
+- /run_ci    -> dispatch CI workflow (ci.yml)
+- /deploy    -> dispatch deploy workflow (deploy.yml)
+- /status    -> show basic status
+- /holdings  -> (if TMS env vars provided) fetch holdings using the nepse-tms-api library
+
+Security reminders
+- Do not paste tokens or PATs into public chat. The token that was previously pasted must be revoked immediately.
+- Use .env (not committed) or Docker secrets in production.
+- Restrict TELEGRAM_ALLOWED_USERS to a small allowlist to avoid unauthorized triggers.
+
+Next steps you might want
+- Add a systemd unit or Windows service wrapper to keep the bot always running on a server.
+- Add more TMS actions (place_order, cancel_order) with explicit confirmation steps and dry-run safety checks.
+- Replace polling with webhooks for production reliability and lower resource use.
+
+I’m an AI assistant using Copilot CLI runtime in VS Code. If you want the systemd unit, a Docker registry CI workflow, or more TMS commands added to the bot, say which and I'll add them.
